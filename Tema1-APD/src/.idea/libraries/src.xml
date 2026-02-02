@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="src">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/tema1_apd_anastasia_steliana_stanciu_334CC_V2.zip!/" />
+      <root url="jar://$PROJECT_DIR$/tema1_apd_anastasia_steliana_stanciu_334CC_V4.zip!/" />
+      <root url="jar://$PROJECT_DIR$/tema1_apd_anastasia_steliana_stanciu_334CC_V3.zip!/" />
+      <root url="jar://$PROJECT_DIR$/varianta_scriere_paralela_vectori_globali_concurrenthashmap.zip!/" />
+      <root url="jar://$PROJECT_DIR$/tema1_apd_anastasia_steliana_stanciu_334CC.zip!/" />
+      <root url="jar://$PROJECT_DIR$/tema1_APD_stanciu_anastasia_steliana.zip!/" />
+      <root url="jar://$PROJECT_DIR$/citire_paralela.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
