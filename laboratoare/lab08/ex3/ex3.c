@@ -21,7 +21,15 @@ int main (int argc, char *argv[])
 
     // ROOT process generates the values for the full vector.
     // Scatter the vector to all processes.
+    if (rank == 0) {
+        v_send = (int *)malloc(sizeof(int) * MULTI * numtasks);
 
+        for (int i = 0; i < MULTI * numtasks; i++) {
+            v_send[i] = i;
+        }
+    }
+
+    MPI_Scatter(v_send, MULTI, MPI_INT, v_recv, MULTI, MPI_INT, 0, MPI_COMM_WORLD);
     /*
      * Prints the values received after scatter.
      * NOTE: If MULTI changed, also change this line.
@@ -32,7 +40,18 @@ int main (int argc, char *argv[])
     // Each process increments the values of the partial vector received.
     // Gathers the values from all the processes.
     // The ROOT process prints the elements received.
+    for (int i = 0; i < MULTI; i++) {
+        v_recv[i]++;
+    }
 
+    MPI_Gather(v_recv, MULTI, MPI_INT, v_send, MULTI, MPI_INT, 0, MPI_COMM_WORLD);
+
+    if (rank == 0) {
+        for (int i = 0; i < MULTI * numtasks; i++) {
+            printf("%d ", v_send[i]);
+        }
+    }
+    printf("\n");
     MPI_Finalize();
 
 }

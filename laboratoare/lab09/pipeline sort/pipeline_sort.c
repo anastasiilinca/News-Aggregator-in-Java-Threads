@@ -65,13 +65,44 @@ int main(int argc, char * argv[]) {
 		qsort(vQSort, nProcesses - 1, sizeof(int), cmp);
 
 		// TODO send the vector to rank == 1
+		for (int i = 0; i < nProcesses - 1; i++) {
+			MPI_Send(&v[i], 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+		}
 
-
+		for (int i = 0; i < nProcesses - 1; i++) {
+			MPI_Recv(&v[i], 1, MPI_INT, i + 1, 0, MPI_COMM_WORLD, NULL);
+		}
+		
 		displayVector(v);
 		compareVectors(v, vQSort);
 	} else {
 		// TODO sort the vector v using N processes (N == nProcesses - 1)
-		
+		int value = -1;
+		int x;
+
+		for (int i = 0; i < nProcesses - 1; i++) {
+			MPI_Recv(&x, 1, MPI_INT, rank - 1, 0, MPI_COMM_WORLD, NULL);
+
+			if (rank != nProcesses - 1) {
+				if (value == -1) {
+					MPI_Send(&value, 1, MPI_INT, rank + 1, 0, MPI_COMM_WORLD);
+					value = x;
+				} else if (x >= value) {
+					MPI_Send(&x, 1, MPI_INT, rank + 1, 0, MPI_COMM_WORLD);
+				} else if (x < value) {
+					MPI_Send(&value, 1, MPI_INT, rank + 1, 0, MPI_COMM_WORLD);
+					value = x;
+				}
+			} else {
+				if (value == -1) {
+					value = x;
+				} else if (x < value) {
+					value = x;
+				}
+			}
+		}
+
+		MPI_Send(&value, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
 	}
 
 	MPI_Finalize();

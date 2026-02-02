@@ -13,9 +13,16 @@ int main (int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     int value = rank;
+    int x;
 
-    for (int i = 2; i <= procs; i *= 2) {
+    for (int pas = 2; pas <= procs; pas *= 2) {
         // TODO
+        if (rank % pas == 0) {
+            MPI_Recv(&x, 1, MPI_INT, rank + pas / 2, 0, MPI_COMM_WORLD, NULL);
+            value += x;
+        } else if (rank % (pas / 2) == 0) {
+            MPI_Send(&value, 1, MPI_INT, rank - pas / 2, 0, MPI_COMM_WORLD);
+        }
     }
 
     if (rank == MASTER) {
@@ -25,4 +32,3 @@ int main (int argc, char *argv[])
     MPI_Finalize();
 
 }
-

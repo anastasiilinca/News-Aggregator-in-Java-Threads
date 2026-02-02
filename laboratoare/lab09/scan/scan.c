@@ -13,9 +13,16 @@ int main (int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     int value = rank;
+    int x;
 
-    for (int i = 1; i < procs; i *= 2) {
-        // TODO
+    for (int pas = 1; pas < procs; pas *= 2) {
+        if (rank + pas < procs) {
+            MPI_Send(&value, 1, MPI_INT, rank + pas, 0, MPI_COMM_WORLD);
+        }
+        if (rank - pas >= 0) {
+            MPI_Recv(&x, 1, MPI_INT, rank - pas, 0, MPI_COMM_WORLD, NULL);
+            value += x;
+        }
     }
 
     printf("Process [%d] has result = %d\n", rank, value);
@@ -23,4 +30,3 @@ int main (int argc, char *argv[])
     MPI_Finalize();
 
 }
-

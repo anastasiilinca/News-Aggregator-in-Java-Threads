@@ -1,4 +1,4 @@
-#include "mpi.h"
+#include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -20,11 +20,14 @@ int main (int argc, char *argv[])
 
     for (int i = 1; i < procs; i *= 2) {
         // TODO
+        if (rank < i) {
+            MPI_Send(&value, 1, MPI_INT, rank + i, 0, MPI_COMM_WORLD);
+        } else if (rank >= i && rank < i * 2) {
+            MPI_Recv(&value, 1, MPI_INT, rank - i, 0, MPI_COMM_WORLD, NULL);
+        }
     }
 
     printf("Process [%d] has value = %d\n", rank, value);
 
     MPI_Finalize();
-
 }
-
